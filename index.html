@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Application Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Job Application Tracker</h1>
+          <p>Stay organized and track your job search progress</p>
+        </div>
+        <div class="theme-toggle">
+          <input
+            type="checkbox"
+            id="theme-switch"
+            class="theme-switch-checkbox"
+          />
+          <label for="theme-switch" class="theme-switch-label">
+            <span class="theme-switch-inner"></span>
+            <span class="theme-switch-switch"></span>
+          </label>
+          <span class="theme-label">Dark Mode</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" id="total-apps">12</div>
+        <div class="stat-label">Total Applications</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="pending-apps">8</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="interview-apps">3</div>
+        <div class="stat-label">Interviews</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="offer-apps">0</div>
+        <div class="stat-label">Offers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="success-rate">25%</div>
+        <div class="stat-label">Response Rate</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="controls">
+        <button class="btn" onclick="toggleAddForm()">
+          + Add New Application
+        </button>
+        <button class="btn btn-secondary" onclick="exportData()">
+          Export to CSV
+        </button>
+        <button class="btn btn-secondary" onclick="clearAllData()">
+          Clear All Data
+        </button>
+        <select id="statusFilter" onchange="filterTable()">
+          <option value="">All Statuses</option>
+          <option value="Applied">Applied</option>
+          <option value="Acknowledged">Acknowledged</option>
+          <option value="Phone Screen">Phone Screen</option>
+          <option value="Technical Assessment">Technical Assessment</option>
+          <option value="Interview">Interview</option>
+          <option value="Final Stage">Final Stage</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Withdrawn">Withdrawn</option>
+        </select>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search companies..."
+          onkeyup="searchTable()"
+        />
+        <select id="visaFilter" onchange="filterTable()">
+          <option value="">All Visa Status</option>
+          <option value="Yes">Sponsors Visa</option>
+          <option value="No">No Visa Sponsorship</option>
+          <option value="Unknown">Unknown</option>
+        </select>
+      </div>
+
+      <div class="bulk-actions" id="bulkActions">
+        <span class="selected-count" id="selectedCount">0 items selected</span>
+        <button class="btn btn-danger" onclick="deleteSelected()">
+          Delete Selected
+        </button>
+        <button class="btn btn-secondary" onclick="clearSelection()">
+          Clear Selection
+        </button>
+      </div>
+
+      <div class="add-row-form" id="addRowForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" id="newCompany" required />
+          </div>
+          <div class="form-group">
+            <label>Position Title *</label>
+            <input type="text" id="newPosition" required />
+          </div>
+          <div class="form-group">
+            <label>Application Date</label>
+            <input type="date" id="newDate" />
+          </div>
+          <div class="form-group">
+            <label>Follow-up Date</label>
+            <input type="date" id="newFollowUp" />
+          </div>
+          <div class="form-group">
+            <label>Application Method</label>
+            <select id="newMethod" onchange="handleMethodChange()">
+              <option value="Company Website">Company Website</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Indeed">Indeed</option>
+              <option value="Reed">Reed</option>
+              <option value="Glassdoor">Glassdoor</option>
+              <option value="Referral">Referral</option>
+              <option value="University">University Career Service</option>
+              <option value="Other">Other</option>
+            </select>
+            <input
+              type="text"
+              id="customMethod"
+              placeholder="Please specify..."
+              style="display: none; margin-top: 5px"
+            />
+          </div>
+          <div class="form-group">
+            <label>Job Description URL</label>
+            <input type="url" id="newURL" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="newStatus">
+              <option value="Applied">Applied</option>
+              <option value="Acknowledged">Acknowledged</option>
+              <option value="Phone Screen">Phone Screen</option>
+              <option value="Technical Assessment">Technical Assessment</option>
+              <option value="Interview">Interview</option>
+              <option value="Final Stage">Final Stage</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Withdrawn">Withdrawn</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Salary Range</label>
+            <input
+              type="text"
+              id="newSalary"
+              placeholder="e.g., £30,000-£35,000"
+            />
+          </div>
+          <div class="form-group">
+            <label>Visa Sponsorship</label>
+            <select id="newVisa">
+              <option value="Unknown">Unknown</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recruiter Contact</label>
+            <input type="text" id="newRecruiter" placeholder="Name & Email" />
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <input
+              type="text"
+              id="newNotes"
+              placeholder="Additional information"
+            />
+          </div>
+        </div>
+        <button class="btn" onclick="addNewRow()">Add Application</button>
+        <button class="btn btn-secondary" onclick="toggleAddForm()">
+          Cancel
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table id="applicationsTable">
+          <thead>
+            <tr>
+              <th class="checkbox-col">
+                <input
+                  type="checkbox"
+                  id="selectAll"
+                  onchange="toggleSelectAll()"
+                />
+              </th>
+              <th>Company</th>
+              <th>Position</th>
+              <th>Applied Date</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Follow-up</th>
+              <th>Salary</th>
+              <th>Visa</th>
+              <th>Recruiter</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Sample data will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>How to Use This Tracker</h3>
+      <p>
+        <strong>Daily:</strong> Add new applications immediately after
+        submitting. Update statuses as you hear back from companies.
+      </p>
+      <p>
+        <strong>Weekly:</strong> Review pending applications and follow up where
+        appropriate. Update your statistics.
+      </p>
+      <p>
+        <strong>Color Coding:</strong> Status badges are color-coded for quick
+        visual scanning. Green = positive progress, Red = closed opportunities.
+      </p>
+      <p>
+        <strong>Follow-up:</strong> Generally follow up 1-2 weeks after
+        applying, then every 2-3 weeks if no response.
+      </p>
+      <p>
+        <strong>Bulk Selection:</strong> Use checkboxes to select multiple
+        applications for bulk deletion. Select all with the header checkbox.
+      </p>
+    </div>
+
+    <div class="export-note">
+      <strong>Pro Tip:</strong> Use the export function to backup your data
+      regularly. You can also import this CSV into Google Sheets or Excel for
+      more advanced analysis.
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
